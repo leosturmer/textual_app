@@ -31,15 +31,10 @@ O que deseja fazer?
             self.push_screen(CadastroProdutos())
 
         if event.button.id == 'bt_TelaEditar':
-            pass 
-
-        
-        if event.button.id == 'bt_TelaVisualizar':
             pass
 
-
-        # lista_items = ListView(
-        #     ListItem(Label(self.items)))
+        if event.button.id == 'bt_TelaVisualizar':
+            self.push_screen(TelaProdutos())
 
     ########### Métodos programa ###########
 
@@ -49,12 +44,12 @@ O que deseja fazer?
 
     def voltar_tela(self):
         app.pop_screen()
-    
 
 ############################################################################################################
 
 ########### Telas programa ###########
 
+########### Cadastro de produtos ###########
 
 class CadastroProdutos(Screen):
     def compose(self):
@@ -70,7 +65,7 @@ Tela de cadastro de produtos em Textual
 
         yield Label('Quantidade: ')
         yield Input(id='tx_quantidade')
-        
+
         yield Label('Descrição: ')
         yield Input(id='tx_descricao')
 
@@ -78,36 +73,59 @@ Tela de cadastro de produtos em Textual
         yield Button('Cadastrar', id='bt_CadastrarProduto')
         yield Button('Voltar', id='bt_voltar')
 
-
     def on_button_pressed(self, event: Button.Pressed):
         if event.button.id == 'bt_limpar':
             Loja.limpar_formulario(self)
 
         if event.button.id == 'bt_CadastrarProduto':
+            id_produto = len(Loja.LISTA_DE_PRODUTOS) + 1
             nome = self.query_one('#tx_nome', Input).value
             preco = float(self.query_one('#tx_preco', Input).value)
             quantidade = int(self.query_one('#tx_quantidade', Input).value)
-            descricao = self.query_one('#tx_descricao', Input).value
+            descricao = int(self.query_one('#tx_descricao', Input).value)
 
-            Loja.LISTA_DE_PRODUTOS[nome] = {"preco": preco, "quantidade": quantidade, "descrição": descricao}
+
+            Loja.LISTA_DE_PRODUTOS[id_produto] = {"nome": nome, "preco": preco, "quantidade": quantidade, "descricao": descricao}
 
             Loja.limpar_formulario(self)
-            self.notify(f'{Loja.LISTA_DE_PRODUTOS.keys()}')
+            self.notify(f'{nome} cadastrado com sucesso!')
 
         if event.button.id == 'bt_voltar':
             Loja.voltar_tela(app)
 
-############################################################################################################
+########### Listar produtos ###########
 
 
+class TelaProdutos(Screen):
+      
+    def compose(self):
+        
+        # yield ListView(id='list')
+
+        # lista_de_visualizacao = ListView()
+
+        # for chave, valor in Loja.LISTA_DE_PRODUTOS.items():
+        #     produto = Label(valor['nome'])
+        #     lista_de_visualizacao.append(ListItem(produto))
+        
+        yield Static(f'''
+{Loja.LISTA_DE_PRODUTOS[1]['nome']}
 
 
+        ''')
 
-############################################################################################################
+        yield Button('Editar produto', id='bt_TelaEditar')
+        yield Button('Voltar', id='bt_voltar') 
+
+    def on_button_pressed(self, event: Button.Pressed):
+        if event.button.id == 'bt_voltar':
+            Loja.voltar_tela(app)
 
 
-########### Início do programa ###########
+    ############################################################################################################
 
+    ############################################################################################################
+    ########### Início do programa ###########
 if __name__ == '__main__':
     app = Loja()
     cadastro = CadastroProdutos()
