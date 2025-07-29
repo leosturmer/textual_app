@@ -58,16 +58,16 @@ Tela de cadastro de produtos em Textual
                      
 ''')
         yield Label('Produto: ')
-        yield Input(id='tx_nome')
+        yield Input(placeholder='Nome do produto', id='tx_nome')
 
         yield Label('Preço: ')
-        yield Input(id='tx_preco')
+        yield Input(placeholder='Preço do produto',id='tx_preco')
 
         yield Label('Quantidade: ')
-        yield Input(id='tx_quantidade')
+        yield Input(placeholder='Digite aqui',id='tx_quantidade')
 
         yield Label('Descrição: ')
-        yield Input(id='tx_descricao')
+        yield Input(placeholder='Descrição',id='tx_descricao')
 
         yield Button('Limpar', id='bt_limpar')
         yield Button('Cadastrar', id='bt_CadastrarProduto')
@@ -82,11 +82,11 @@ Tela de cadastro de produtos em Textual
             nome = self.query_one('#tx_nome', Input).value
             preco = float(self.query_one('#tx_preco', Input).value)
             quantidade = int(self.query_one('#tx_quantidade', Input).value)
-            descricao = int(self.query_one('#tx_descricao', Input).value)
+            descricao = self.query_one('#tx_descricao', Input).value
 
-
-            Loja.LISTA_DE_PRODUTOS[id_produto] = {"nome": nome, "preco": preco, "quantidade": quantidade, "descricao": descricao}
-
+            Loja.LISTA_DE_PRODUTOS[id_produto] = {
+                "nome": nome, "preco": preco, "quantidade": quantidade, "descricao": descricao}
+                                                                 
             Loja.limpar_formulario(self)
             self.notify(f'{nome} cadastrado com sucesso!')
 
@@ -95,32 +95,26 @@ Tela de cadastro de produtos em Textual
 
 ########### Listar produtos ###########
 
-
 class TelaProdutos(Screen):
-      
+    
+    # lista_visualizacao_de_items = ListView()
+
+    # def atualizar_lista_view(self):
+    #     for item in Loja.LISTA_DE_PRODUTOS.values():
+    #         produto = ListItem(Label(f'{produto["nome"]}'))
+    #         self.lista_visualizacao_de_items.append(item)
+
     def compose(self):
-        
-        # yield ListView(id='list')
 
-        # lista_de_visualizacao = ListView()
-
-        # for chave, valor in Loja.LISTA_DE_PRODUTOS.items():
-        #     produto = Label(valor['nome'])
-        #     lista_de_visualizacao.append(ListItem(produto))
-        
-        yield Static(f'''
-{Loja.LISTA_DE_PRODUTOS[1]['nome']}
-
-
-        ''')
+        # yield self.lista_visualizacao_de_items
+    
 
         yield Button('Editar produto', id='bt_TelaEditar')
-        yield Button('Voltar', id='bt_voltar') 
+        yield Button('Voltar', id='bt_voltar')
 
     def on_button_pressed(self, event: Button.Pressed):
         if event.button.id == 'bt_voltar':
             Loja.voltar_tela(app)
-
 
     ############################################################################################################
 
